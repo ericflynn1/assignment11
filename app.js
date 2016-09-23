@@ -1,50 +1,48 @@
+let points = 0;
+let dieAntwort = null;
+let score = 0;
+
 function questions() {
-let request = new XMLHttpRequest();
-request.open('GET', 'http://jservice.io/api/random');
-request.addEventListener('load', function () {
-    // console.log('got the target');
-    let delivery = JSON.parse(request.responseText);
-    console.log(delivery[0]);
-    let jeopardy = delivery[0].question;
-    let frage = document.createElement('quest');
+    
+
+    
+
+    let request = new XMLHttpRequest();
+    request.open('GET', 'http://jservice.io/api/random');
+    request.addEventListener('load', function () {
+        let delivery = JSON.parse(request.responseText);
+        let jeopardy = delivery[0].question;
+        let frages = document.getElementById('frage');
         frage.textContent = jeopardy;
-    // let antwort = delivery[0].answer; 
-    // let ans = document.createElement('answer');
-    //     ans.textContent = antwort;
-    
-    let parent = document.querySelector('body');
-    let submitBtn = document.createElement('button');
-    submitBtn.textContent = 'Submit Answer';
-    submitBtn.addEventListener('click', function () {
-        console.log('DAILY DOUBLE');
-
+        console.log(delivery[0]);
     });
-    
-    parent.appendChild(frage);
-    // parent.appendChild(antwort);
-    let answercontainer = document.createElement('hidden');
-});
-request.open('GET', 'http://jservice.io/api/random');
-request.addEventListener('load', function () {
-    // console.log('got the target');
-    let delivery = JSON.parse(request.responseText);
-    console.log(delivery[0]);
-let antwort = delivery[0].answer; 
-    let ans = document.createElement('answer');
-        ans.textContent = antwort;
-        ans.classList.add('hidden');
-        
 
-let parent = document.querySelector('body');
-parent.appendChild(ans);
-});
-request.send();
+    request.addEventListener('load', function () {
+        let delivery = JSON.parse(request.responseText);
+        points = delivery[0].value;
+        dieAntwort = delivery[0].answer;
+    });
 
+    request.send();
 }
 
 window.addEventListener('load', function () {
-questions();
-})
+    questions();
+    document.getElementById('btn').addEventListener('click', function compare() {
+        let correct = dieAntwort;
+        let input = document.getElementById('inputBox').value;
+
+        if (input === correct) {
+            score = points + score;
+        } else {
+            score = score - points;
+        }
+        let overallScore = document.getElementById('scoreBoard');
+        overallScore.textContent = score;
+        questions();
+    });
+
+});
 
 
 
